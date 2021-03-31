@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-const { getCards, deleteCard, createCard, likeCard, dislikeCard } = require('../controllers/cards');
-
+const {
+  getCards, deleteCard, createCard, likeCard, dislikeCard,
+} = require('../controllers/cards');
 
 router.get('/', getCards);
 
@@ -13,5 +14,8 @@ router.put('/:cardId/likes', likeCard);
 
 router.delete('/:cardId/likes', dislikeCard);
 
-module.exports = router;
+router.use((req, res) => {
+  res.status(404).send({ message: 'Ресурс по указанному маршруту не найден' });
+});
 
+module.exports = router;
