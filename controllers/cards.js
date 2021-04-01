@@ -52,8 +52,9 @@ module.exports.likeCard = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       } else if (err.statusCode === 404) {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else {
+        res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -74,7 +75,8 @@ module.exports.dislikeCard = (req, res) => {
         res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       } else if (err.statusCode === 404) {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else {
+        res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });
 };
