@@ -1,21 +1,26 @@
 const router = require('express').Router();
+const NotFoundError = require('../errors/not-found-error');
 
 const {
   getCards, deleteCard, createCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
 
-router.get('/', getCards);
+const {
+  validateGetCards, validateCreateCard, validateDeleteCard,
+} = require('../middlewares/validatons');
 
-router.post('/', createCard);
+router.get('/', validateGetCards, getCards);
 
-router.delete('/:cardId', deleteCard);
+router.post('/', validateCreateCard, createCard);
 
-router.put('/:cardId/likes', likeCard);
+router.delete('/:cardId', validateDeleteCard, deleteCard);
 
-router.delete('/:cardId/likes', dislikeCard);
+router.put('/:cardId/likes', validateDeleteCard, likeCard);
 
-router.use((req, res) => {
-  res.status(404).send({ message: 'Ресурс по указанному маршруту не найден' });
+router.delete('/:cardId/likes', validateDeleteCard, dislikeCard);
+
+router.use((req, res, next) => {
+  next(new NotFoundError('Ресурс по указанному маршруту не найден.'));
 });
 
 module.exports = router;
