@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-error');
 const UnauthorizedError = require('../errors/unauthorized-error');
-const ForbiddenError = require('../errors/forbidden-error');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictingRequestError = require('../errors/conflicting-request-error');
 
@@ -97,7 +96,7 @@ module.exports.createUser = (req, res, next) => {
   }
   User.findOne({ email }).then((user) => {
     if (user) {
-      next(new ForbiddenError('Пользователь уже существует.'));
+      next(new ConflictingRequestError('Пользователь уже существует.'));
     } else {
       bcrypt.hash(password, 10)
         .then((hash) => {
@@ -138,7 +137,7 @@ module.exports.login = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new UnauthorizedError('Переданы некорректные данные при авторизации пользователя.');
       } else {
-        next(err);
+        next(new UnauthorizedError('Переданы некорректные данные при авторизации пользователя.'));
       }
     });
 };

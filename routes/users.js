@@ -9,13 +9,14 @@ const {
   validateGetUsers,
   validateGetUserById,
   validateLogin,
+  validateRegistration,
   validateUpdateUserAvatar,
   validateUpdateUser,
 } = require('../middlewares/validatons');
 
 router.post('/signin', validateLogin, login);
 
-router.post('/signup', validateLogin, createUser);
+router.post('/signup', validateRegistration, createUser);
 
 router.use(auth);
 

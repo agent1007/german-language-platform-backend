@@ -1,7 +1,6 @@
 const JWT_SECRET = 'pavel001';
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/unauthorized-error');
-const ForbiddenError = require('../errors/forbidden-error');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -14,7 +13,7 @@ module.exports = (req, res, next) => {
     try {
       payload = jwt.verify(token, JWT_SECRET);
     } catch (err) {
-      throw new ForbiddenError('Недостаточно прав.');
+      throw new UnauthorizedError('Недостаточно прав.');
     }
     req.user = payload;
   } catch (err) {

@@ -24,13 +24,58 @@ module.exports.validateGetUserById = celebrate({
 
 module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().messages({
-      'any.required': 'Полу email должно быть заполнено.',
-    }),
-    passwoed: Joi.string().required().messages({
+    email: Joi.string().custom((value, helpers) => {
+      if (validator.isEmail(value)) {
+        return value;
+      }
+      return helpers.message('Поле "email" должно быть валидным email-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "email" должно быть заполнено',
+      }),
+    password: Joi.string().required().messages({
       'string.min': 'Минимальная длина пароля составляет 8 символов.',
       'any.required': 'Пароль должен быть заполнен.',
     }),
+  }),
+});
+
+module.exports.validateRegistration = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().custom((value, helpers) => {
+      if (validator.isEmail(value)) {
+        return value;
+      }
+      return helpers.message('Поле "email" должно быть валидным email-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "email" должно быть заполнено',
+      }),
+    password: Joi.string().required().messages({
+      'string.min': 'Минимальная длина пароля составляет 8 символов.',
+      'any.required': 'Пароль должен быть заполнен.',
+    }),
+    name: Joi.string().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "name" должно быть заполнено',
+      }),
+    about: Joi.string().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "about" должно быть заполнено',
+      }),
+    avatar: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле "avatar" должно быть валидным url-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "avatar" должно быть заполнено',
+      }),
   }),
 });
 
@@ -73,13 +118,13 @@ module.exports.validateGetCards = celebrate({
 
 module.exports.validateCreateCard = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30)
+    name: Joi.string().min(2).max(30).required()
       .messages({
         'string.min': 'Минимальная длина поля "name" - 2',
         'string.max': 'Максимальная длина поля "name" - 30',
         'any.required': 'Поле "name" должно быть заполнено',
       }),
-    link: Joi.string().custom((value, helpers) => {
+    link: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }

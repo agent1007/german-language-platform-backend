@@ -9,14 +9,14 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.id)
+  const { cardId } = req.params;
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
       } else if (!card.owner.equals(req.user._id)) {
         next(new ForbiddenError('Нельзя удалять чужие карточки!'));
       } else {
-        const { cardId } = req.params;
         Card.findByIdAndRemove(cardId)
           .then((cards) => {
             res.send(cards);
