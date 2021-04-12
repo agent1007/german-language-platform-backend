@@ -22,9 +22,15 @@ module.exports.validateGetUserById = celebrate({
   }).unknown(true),
 });
 
+module.exports.validateGetCurrentUser = celebrate({
+  headers: Joi.object().keys({
+    authorization: Joi.string().min(2).max(200),
+  }).unknown(true),
+});
+
 module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().custom((value, helpers) => {
+    email: Joi.string().required().custom((value, helpers) => {
       if (validator.isEmail(value)) {
         return value;
       }
@@ -42,7 +48,7 @@ module.exports.validateLogin = celebrate({
 
 module.exports.validateRegistration = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().custom((value, helpers) => {
+    email: Joi.string().required().custom((value, helpers) => {
       if (validator.isEmail(value)) {
         return value;
       }

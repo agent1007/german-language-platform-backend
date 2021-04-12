@@ -12,6 +12,7 @@ const {
   validateRegistration,
   validateUpdateUserAvatar,
   validateUpdateUser,
+  validateGetCurrentUser,
 } = require('../middlewares/validatons');
 
 router.post('/signin', validateLogin, login);
@@ -22,7 +23,7 @@ router.use(auth);
 
 router.get('/users', validateGetUsers, getUsers);
 
-router.get('/users/me', validateGetUserById, getCurrentUser);
+router.get('/users/me', validateGetCurrentUser, getCurrentUser);
 
 router.patch('/users/me', validateUpdateUser, updateUser);
 
