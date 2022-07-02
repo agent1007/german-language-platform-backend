@@ -30,13 +30,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/agent1007/express-mesto.git"
+    "url": "git+https://github.com/agent1007/german-language-platform-backend.git"
   },
   "keywords": [],
   "author": "Pavel Cherkasov",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/agent1007/express-mesto/issues"
+    "url": "https://github.com/agent1007/german-language-platform-backend/issues"
   },
-  "homepage": "https://github.com/agent1007/express-mesto#readme"
+  "homepage": "https://github.com/agent1007/german-language-platform-backend#readme"
 }
