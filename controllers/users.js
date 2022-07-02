@@ -6,7 +6,7 @@ const UnauthorizedError = require('../errors/unauthorized-error');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictingRequestError = require('../errors/conflicting-request-error');
 
-const JWT_SECRET = 'pavel001';
+const { JWT_SECRET } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({}).then((users) => res.send(users))
@@ -48,8 +48,8 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  const { name, email } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
@@ -127,11 +127,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        sameSite: true,
-      }).status(200).send({ token });
+      res.status(200).send({ token: jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' }) });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

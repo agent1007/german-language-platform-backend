@@ -1,4 +1,7 @@
 const router = require('express').Router();
+const express = require('express');
+
+const app = express();
 
 const {
   getUsers, getUserById, createUser, updateUser, updateAvatar, login, getCurrentUser,
@@ -14,6 +17,12 @@ const {
   validateUpdateUser,
   validateGetCurrentUser,
 } = require('../middlewares/validatons');
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 router.post('/signin', validateLogin, login);
 

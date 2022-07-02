@@ -1,9 +1,15 @@
+require('dotenv').config();
+
+console.log(process.env.NODE_ENV);
+
 const express = require('express');
 
 const { PORT = 3000 } = process.env;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -11,7 +17,9 @@ const NotFoundError = require('./errors/not-found-error');
 
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/mestodb',
+app.use(cors());
+app.use(requestLogger);
+mongoose.connect('mongodb://localhost:27017/german-languageBD',
   {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -23,10 +31,14 @@ app.use('/', require('./routes/users'));
 
 app.use('/cards', require('./routes/cards'));
 
+app.use('/resultats', require('./routes/resultats'));
+
+app.use('/questions', require('./routes/questions'));
+
 app.use('/', () => {
   throw new NotFoundError('Ресурс по указанному маршруту не найден.');
 });
-
+app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {

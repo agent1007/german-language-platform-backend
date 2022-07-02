@@ -107,11 +107,20 @@ module.exports.validateUpdateUser = celebrate({
         'string.max': 'Максимальная длина поля "name" - 30',
         'any.required': 'Поле "name" должно быть заполнено',
       }),
-    about: Joi.string().min(2).max(30).required()
+    about: Joi.string().min(2).max(30)
       .messages({
         'string.min': 'Минимальная длина поля "name" - 2',
         'string.max': 'Максимальная длина поля "name" - 30',
         'any.required': 'Поле "about" должно быть заполнено',
+      }),
+    email: Joi.string().required().custom((value, helpers) => {
+      if (validator.isEmail(value)) {
+        return value;
+      }
+      return helpers.message('Поле "email" должно быть валидным email-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "email" должно быть заполнено',
       }),
   }),
 });
@@ -130,6 +139,24 @@ module.exports.validateCreateCard = celebrate({
         'string.max': 'Максимальная длина поля "name" - 30',
         'any.required': 'Поле "name" должно быть заполнено',
       }),
+    author: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "author" должно быть заполнено',
+      }),
+    titleRu: Joi.string().min(1).max(400).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 1',
+        'string.max': 'Максимальная длина поля "name" - 400',
+        'any.required': 'Поле "titleRu" должно быть заполнено',
+      }),
+    titleDeu: Joi.string().min(1).max(400).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 1',
+        'string.max': 'Максимальная длина поля "name" - 400',
+        'any.required': 'Поле "titleDeu" должно быть заполнено',
+      }),
     link: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
@@ -142,6 +169,37 @@ module.exports.validateCreateCard = celebrate({
   }),
 });
 
+module.exports.validateUpdateCard = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "name" должно быть заполнено',
+      }),
+    titleRu: Joi.string().min(1).max(400).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 1',
+        'string.max': 'Максимальная длина поля "name" - 400',
+        'any.required': 'Поле "titleRu" должно быть заполнено',
+      }),
+    titleDeu: Joi.string().min(1).max(400).required()
+      .messages({
+        'string.min': 'Минимальная длина поля "name" - 1',
+        'string.max': 'Максимальная длина поля "name" - 400',
+        'any.required': 'Поле "titleDeu" должно быть заполнено',
+      }),
+    link: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле "link" должно быть валидным url-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "link" должно быть заполнено',
+      }),
+  }),
+});
 module.exports.validateDeleteCard = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().custom((value, helpers) => {

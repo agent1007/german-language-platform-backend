@@ -8,6 +8,24 @@ const cardSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
+  author: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
+  },
+  titleRu: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 400,
+  },
+  titleDeu: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 400,
+  },
   link: {
     type: String,
     required: true,

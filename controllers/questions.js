@@ -1,12 +1,34 @@
-const Card = require('../models/card');
+const Questions = require('../models/questions');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ForbiddenError = require('../errors/forbidden-error');
 
-module.exports.getCards = (req, res, next) => {
-  Card.find({}).then((cards) => res.send(cards))
+module.exports.getQuestions = (req, res, next) => {
+  Questions.find({}).then((questions) => res.send(questions))
     .catch((err) => next(err));
 };
+
+module.exports.createQuestions = (req, res, next) => {
+  const {
+    testName, questions, titleQue, variants, titleVar,
+  } = req.body;
+  Questions.create({
+    testName, questions, titleQue, variants, titleVar, idVar: req.user._id, idQue: req.user._id,
+  }).then((card) => res.send(card))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некоректные данные при создании карточки.'));
+      } else {
+        next(err);
+      }
+    });
+};
+
+
+
+
+
+
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
@@ -32,21 +54,7 @@ module.exports.deleteCard = (req, res, next) => {
     });
 };
 
-module.exports.createCard = (req, res, next) => {
-  const {
-    name, link, author, titleRu, titleDeu,
-  } = req.body;
-  Card.create({
-    name, link, author, titleRu, titleDeu, owner: req.user._id,
-  }).then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некоректные данные при создании карточки.'));
-      } else {
-        next(err);
-      }
-    });
-};
+
 
 module.exports.updateCard = (req, res, next) => {
   const {
